@@ -826,12 +826,29 @@
                 ctx.fillStyle = 'rgba(255,255,255,.12)'; ctx.beginPath(); ctx.arc(160, 200, 260, 0, Math.PI*2); ctx.fill();
                 ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
                 ctx.font = '900 72px Arial, sans-serif'; ctx.fillText('ANONYMOUS MESSAGE', 540, 240);
-                ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(90, 380, 900, 850, 45); ctx.fill();
-                ctx.fillStyle = '#1e293b'; ctx.font = '700 52px Arial, sans-serif';
+                // BLACK GLASS POSTER — keeps the message readable even for short text like "hello Roshan"
+                ctx.save();
+                ctx.fillStyle = 'rgba(5, 10, 18, 0.82)';
+                ctx.beginPath(); ctx.roundRect(90, 380, 900, 850, 45); ctx.fill();
+                ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.roundRect(90, 380, 900, 850, 45); ctx.stroke();
+                ctx.restore();
+
+                // Message highlight glow + white text
+                ctx.shadowColor = 'rgba(0,0,0,.75)'; ctx.shadowBlur = 18;
+                ctx.fillStyle = '#ffffff'; ctx.font = '800 58px Arial, sans-serif';
                 const words = message.split(/\s+/); let lines=[], line='';
-                for (const word of words) { const test=(line+' '+word).trim(); if (ctx.measureText(test).width>760 && line) { lines.push(line); line=word; } else line=test; }
+                for (const word of words) {
+                    const test=(line+' '+word).trim();
+                    if (ctx.measureText(test).width>760 && line) { lines.push(line); line=word; }
+                    else line=test;
+                }
                 if(line) lines.push(line);
-                let y=560; lines.slice(0,12).forEach(l=>{ctx.fillText(l,540,y); y+=75;});
+                lines = lines.slice(0, 10);
+                const lineHeight = 82;
+                const startY = 805 - ((lines.length - 1) * lineHeight / 2);
+                lines.forEach((l,i)=>ctx.fillText(l,540,startY + i*lineHeight));
+                ctx.shadowBlur = 0;
                 ctx.fillStyle='#fff'; ctx.font='800 48px Arial, sans-serif'; ctx.fillText('@'+(userData?.username || 'anonbox'),540,1510);
                 ctx.font='600 34px Arial, sans-serif'; ctx.fillText('Send me anonymous messages!',540,1580);
                 const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
@@ -859,7 +876,7 @@
             }
         };
 
-        // UI HELPERS
+                // UI HELPERS
         window.showToast = (msg) => {
             const t = document.getElementById('toast');
             t.innerText = msg;
