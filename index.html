@@ -43,20 +43,18 @@
         }
 
         /* AD CONTAINERS */
-        .ad-top-native {
+        .ad-top-banner {
             width: 100%;
             margin-bottom: 20px;
-            min-height: 100px;
             display: flex;
             justify-content: center;
-            z-index: 100;
+            min-height: 250px;
         }
 
-        .ad-banner-standard {
+        .ad-native-container {
             width: 100%;
             margin: 20px 0;
-            display: flex;
-            justify-content: center;
+            min-height: 100px;
         }
 
         /* Components */
@@ -178,9 +176,10 @@
             padding: 12px 24px;
             border-radius: 50px;
             font-size: 0.9rem;
-            z-index: 1000;
+            z-index: 3000;
             display: none;
             box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            color: white;
         }
 
         .empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); }
@@ -190,18 +189,23 @@
 
     <div class="app-container">
 
-        <!-- TOP BANNER AD -->
-        <div class="ad-banner-standard" style="margin: 0 0 20px 0;">
+        <!-- AD #1 — TOP (300x250 Banner) -->
+        <div class="ad-top-banner">
             <script>
-                atOptions = { 'key' : 'd7e02854a87a155971c8981e723d9c1b', 'format' : 'iframe', 'height' : 250, 'width' : 300, 'params' : {} };
+                atOptions = {
+                    'key' : 'd7e02854a87a155971c8981e723d9c1b',
+                    'format' : 'iframe',
+                    'height' : 250,
+                    'width' : 300,
+                    'params' : {}
+                };
             </script>
             <script src="https://arkgleamfox.com/d7e02854a87a155971c8981e723d9c1b/invoke.js"></script>
         </div>
 
-
         <!-- START VIEW -->
         <div id="view-start" class="view">
-            <div style="text-align: center; padding-top: 40px;">
+            <div style="text-align: center; padding-top: 20px;">
                 <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 10px;">AnonBox</h1>
                 <p style="color: var(--text-dim); margin-bottom: 40px;">Receive anonymous messages from your friends!</p>
                 <button class="btn btn-primary" onclick="navigateTo('platform')">Get Started</button>
@@ -218,10 +222,10 @@
                 <div class="platform-item" onclick="selectPlatform(this, 'WhatsApp')">WhatsApp</div>
                 <div class="platform-item" onclick="selectPlatform(this, 'Other')">Other</div>
             </div>
-            <button class="btn btn-primary" onclick="goToUsernameFlow()">Continue</button>
+            <button class="btn btn-primary" onclick="navigateTo('username')">Continue</button>
         </div>
 
-        <!-- USERNAME FLOW -->
+        <!-- USERNAME REGISTRATION FLOW -->
         <div id="view-username" class="view">
             <h2 style="margin-bottom: 10px;">Claim your username</h2>
             <p style="color: var(--text-dim); margin-bottom: 30px;">This will be your unique anonymous link handle.</p>
@@ -238,47 +242,37 @@
             </div>
 
             <button id="createAccountBtn" class="btn btn-primary" onclick="processSignup()">Create Account</button>
-            <button class="btn btn-outline" onclick="loginWithUsername()">Login with Username</button>
-            <button class="btn btn-outline" onclick="navigateTo('platform')">Back</button>
+            <button class="btn btn-outline" onclick="navigateTo('start')">Back</button>
 
-            <!-- NATIVE AD: BELOW LOGIN / REGISTER -->
-            <div class="ad-top-native" style="margin:20px 0 0 0;">
+            <!-- AD #2 — BELOW LOGIN / REGISTER (Native Banner) -->
+            <div class="ad-native-container">
                 <script async="async" data-cfasync="false" src="https://arkgleamfox.com/73913bd6b1f3b550d12d5b5281c3ecc6/invoke.js"></script>
                 <div id="container-73913bd6b1f3b550d12d5b5281c3ecc6"></div>
             </div>
-
-
-            <small style="display:block;text-align:center;color:var(--text-dim);margin-top:8px;">
-                Login works on the same browser/device where this anonymous account was created.
-            </small>
         </div>
 
-
-        <!-- USERNAME LOGIN -->
+        <!-- LOGIN VIEW -->
         <div id="view-login" class="view">
             <h2 style="margin-bottom: 10px;">Login</h2>
-            <p style="color: var(--text-dim); margin-bottom: 30px;">Login with your username and password.</p>
+            <p style="color: var(--text-dim); margin-bottom: 30px;">Login to your existing inbox on this device.</p>
 
             <div class="input-group">
                 <label>USERNAME</label>
-                <input type="text" id="loginUsernameInput" class="input-main" placeholder="@username" autocomplete="username">
-            </div>
-
-            <div class="input-group">
-                <label>PASSWORD</label>
-                <input type="password" id="loginPasswordInput" class="input-main" placeholder="Password" autocomplete="current-password">
+                <input type="text" id="loginUsernameInput" class="input-main" placeholder="@username">
             </div>
 
             <button id="loginBtn" class="btn btn-primary" onclick="processLogin()">Login</button>
-            <button class="btn btn-outline" onclick="navigateTo('username')">Register</button>
+            <button class="btn btn-outline" onclick="navigateTo('start')">Back</button>
 
-            <!-- NATIVE AD: BELOW LOGIN / REGISTER -->
-            <div class="ad-top-native" style="margin:20px 0 0 0;">
+            <p style="font-size: 0.8rem; color: var(--text-dim); text-align: center; margin-top: 15px;">
+                Note: Anonymous accounts are tied to your current browser session.
+            </p>
+
+            <!-- AD #2 — BELOW LOGIN / REGISTER (Native Banner) -->
+            <div class="ad-native-container">
                 <script async="async" data-cfasync="false" src="https://arkgleamfox.com/73913bd6b1f3b550d12d5b5281c3ecc6/invoke.js"></script>
                 <div id="container-73913bd6b1f3b550d12d5b5281c3ecc6"></div>
             </div>
-
-
         </div>
 
         <!-- DASHBOARD -->
@@ -306,7 +300,7 @@
                     <input type="text" id="shareLinkInput" class="input-main" readonly style="font-size: 0.9rem; flex: 1;">
                     <button class="btn btn-primary" style="width: auto; margin-bottom: 0;" onclick="copyLink()">Copy</button>
                 </div>
-                <button class="btn btn-outline" style="margin-top: 15px; margin-bottom: 0;" onclick="openShareModal()">Share to Instagram Stories</button>
+                <button class="btn btn-outline" style="margin-top: 15px; margin-bottom: 0;" onclick="openShareModal()">Share Link</button>
             </div>
 
             <h3 style="margin-bottom: 15px;">Inbox</h3>
@@ -317,7 +311,7 @@
             <button class="btn btn-outline" style="margin-top: 40px; color: #ef4444;" onclick="handleLogout()">Logout</button>
         </div>
 
-        <!-- PUBLIC PROFILE VIEW -->
+        <!-- PUBLIC PROFILE VIEW (MESSAGING) -->
         <div id="view-profile" class="view">
             <div class="profile-header">
                 <div class="avatar-circle" id="pubAvatar">?</div>
@@ -356,10 +350,10 @@
     <!-- FIREBASE SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, query, where, orderBy, onSnapshot, addDoc, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIG
+        // FIREBASE CONFIG (Kept exactly as provided)
         const firebaseConfig = {
             apiKey: "AIzaSyDXCfNfPDZr7eoHmfmz32uq0jt5PQIf_gY",
             authDomain: "anonbox-66653.firebaseapp.com",
@@ -373,11 +367,12 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // STATE
+        // APP STATE
         let currentUser = null;
         let userData = null;
         let selectedPlatform = "Other";
-        let targetUser = null; // For public profile messaging
+        let targetUser = null; 
+        let inboxUnsubscribe = null;
 
         // ROUTER
         window.addEventListener('hashchange', handleRouting);
@@ -391,14 +386,11 @@
                 const username = hash.replace('#@', '').toLowerCase();
                 await showPublicProfile(username);
             } else {
-                const targetViewId = 'view-' + hash.replace('#', '');
-                const targetView = document.getElementById(targetViewId);
+                const viewId = 'view-' + hash.replace('#', '');
+                const targetView = document.getElementById(viewId);
                 
                 if (hash === '#dashboard') {
-                    if (!currentUser) {
-                        window.location.hash = '#start';
-                        return;
-                    }
+                    if (!currentUser) { window.location.hash = '#start'; return; }
                     loadDashboard();
                 }
 
@@ -413,18 +405,19 @@
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     userData = userDoc.data();
-                    if (window.location.hash === '#start' || window.location.hash === '#username' || window.location.hash === '') {
+                    if (['#start', '#login', '#username', ''].includes(window.location.hash)) {
                         window.location.hash = '#dashboard';
                     }
                 }
             } else {
                 currentUser = null;
                 userData = null;
+                if (inboxUnsubscribe) { inboxUnsubscribe(); inboxUnsubscribe = null; }
             }
             handleRouting();
         });
 
-        // ACTIONS
+        // UI ACTIONS
         window.navigateTo = (view) => window.location.hash = '#' + view;
 
         window.selectPlatform = (el, p) => {
@@ -433,99 +426,20 @@
             el.classList.add('selected');
         };
 
-        window.goToUsernameFlow = () => {
-            navigateTo('username');
-        };
-
-        window.loginWithUsername = async () => {
-            const username = document.getElementById('usernameInput').value
-                .toLowerCase().trim().replace('@', '');
-            const status = document.getElementById('usernameStatus');
-            const btn = document.querySelector('#view-username .btn-outline');
-
-            if (username.length < 3) {
-                showToast("Enter your username first");
-                return;
-            }
-
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = '<span class="loader"></span> Checking...';
-            }
-
-            try {
-                const mapping = await Promise.race([
-                    getDoc(doc(db, "usernames", username)),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 10000))
-                ]);
-
-                if (!mapping.exists()) {
-                    status.innerText = "Username not found";
-                    status.style.color = "#ef4444";
-                    showToast("Username not found");
-                    return;
-                }
-
-                const savedUid = mapping.data().uid;
-
-                // Firebase Anonymous Auth cannot sign in to another anonymous UID.
-                // If this browser still has the original session, verify it and restore dashboard.
-                if (!currentUser) {
-                    await signInAnonymously(auth);
-                }
-
-                if (auth.currentUser && auth.currentUser.uid === savedUid) {
-                    const profileDoc = await getDoc(doc(db, "users", savedUid));
-                    if (profileDoc.exists()) {
-                        userData = profileDoc.data();
-                        currentUser = auth.currentUser;
-                        showToast("Login successful!");
-                        window.location.hash = '#dashboard';
-                    } else {
-                        showToast("Profile not found");
-                    }
-                } else {
-                    status.innerText = "This username belongs to another device/session.";
-                    status.style.color = "#f59e0b";
-                    showToast("Username login cannot restore this account on a new device.");
-                }
-            } catch (e) {
-                console.error("Username login error:", e);
-                status.innerText = e.message === "timeout"
-                    ? "Request timed out. Check your internet connection."
-                    : "Login failed. Please try again.";
-                status.style.color = "#ef4444";
-                showToast("Login failed");
-            } finally {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerText = "Login with Username";
-                }
-            }
-        };
-
+        // SIGNUP LOGIC
         window.processSignup = async () => {
             const username = document.getElementById('usernameInput').value.toLowerCase().trim().replace('@', '');
             const displayName = document.getElementById('displayNameInput').value.trim() || username;
             const btn = document.getElementById('createAccountBtn');
             const status = document.getElementById('usernameStatus');
 
-            if (username.length < 3 || username.length > 20) {
-                showToast("Username must be 3-20 characters");
-                return;
-            }
-
-            const regex = /^[a-z0-9_.]+$/;
-            if (!regex.test(username)) {
-                showToast("Invalid characters in username");
-                return;
-            }
-
+            if (username.length < 3) { showToast("Username too short"); return; }
+            
             btn.disabled = true;
             btn.innerHTML = '<span class="loader"></span>';
 
             try {
-                // Check uniqueness
+                // 1. Check Uniqueness
                 const userMapping = await getDoc(doc(db, "usernames", username));
                 if (userMapping.exists()) {
                     status.innerText = "Username already taken";
@@ -535,58 +449,81 @@
                     return;
                 }
 
-                // Auth
-                const cred = await Promise.race([
-                    signInAnonymously(auth),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error("auth-timeout")), 15000))
-                ]);
+                // 2. Auth Anonymously
+                const cred = await signInAnonymously(auth);
                 const uid = cred.user.uid;
 
-                // Save Profile
+                // 3. Save Profile & Mapping
                 await setDoc(doc(db, "users", uid), {
                     username: username,
                     displayName: displayName,
-                    selectedPlatform: selectedPlatform,
+                    platform: selectedPlatform,
                     createdAt: serverTimestamp()
                 });
-
-                // Save Mapping
                 await setDoc(doc(db, "usernames", username), { uid: uid });
 
                 showToast("Account created!");
                 window.location.hash = '#dashboard';
-
             } catch (e) {
                 console.error(e);
-                if (e.message === "auth-timeout") {
-                    showToast("Firebase login timed out. Check internet/Firebase Auth settings.");
-                } else {
-                    showToast("Error creating account: " + (e.message || "Please try again"));
-                }
+                showToast("Error creating account");
                 btn.disabled = false;
                 btn.innerText = "Create Account";
             }
         };
 
+        // LOGIN LOGIC (Session-based)
+        window.processLogin = async () => {
+            const username = document.getElementById('loginUsernameInput').value.toLowerCase().trim().replace('@', '');
+            const btn = document.getElementById('loginBtn');
+            if (!username) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span>';
+
+            try {
+                const mapping = await getDoc(doc(db, "usernames", username));
+                if (!mapping.exists()) {
+                    showToast("Username not found");
+                } else {
+                    const savedUid = mapping.data().uid;
+                    if (currentUser && currentUser.uid === savedUid) {
+                        showToast("Logged in!");
+                        window.location.hash = '#dashboard';
+                    } else {
+                        showToast("Please use the device/browser where this was created.");
+                    }
+                }
+            } catch (e) {
+                showToast("Login failed");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Login";
+            }
+        };
+
+        // DASHBOARD & INBOX
         async function loadDashboard() {
             if (!userData) return;
             
+            // Header UI
             document.getElementById('dashAvatar').innerText = userData.displayName[0].toUpperCase();
             document.getElementById('dashDisplayName').innerText = userData.displayName;
             document.getElementById('dashHandle').innerText = '@' + userData.username;
             document.getElementById('shareUsername').innerText = '@' + userData.username;
             
-            const fullLink = window.location.origin + window.location.pathname + '#@' + userData.username;
-            document.getElementById('shareLinkInput').value = fullLink;
+            const link = window.location.origin + window.location.pathname + '#@' + userData.username;
+            document.getElementById('shareLinkInput').value = link;
 
-            // Load Messages
+            // Setup Realtime Inbox Listener
+            if (inboxUnsubscribe) inboxUnsubscribe();
+
             const q = query(
                 collection(db, "messages"),
-                where("recipientId", "==", currentUser.uid),
-                orderBy("createdAt", "desc")
+                where("recipientId", "==", currentUser.uid)
             );
 
-            onSnapshot(q, (snapshot) => {
+            inboxUnsubscribe = onSnapshot(q, (snapshot) => {
                 const container = document.getElementById('inboxContainer');
                 let unreadCount = 0;
                 
@@ -597,57 +534,71 @@
                     return;
                 }
 
+                // Sort in JS to avoid composite index requirement
+                const msgs = [];
+                snapshot.forEach(d => msgs.push({ id: d.id, ...d.data() }));
+                msgs.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
                 container.innerHTML = '';
-                snapshot.forEach(docSnap => {
-                    const msg = docSnap.data();
+                msgs.forEach(msg => {
                     if (!msg.isRead) unreadCount++;
-                    
                     const date = msg.createdAt ? new Date(msg.createdAt.seconds * 1000).toLocaleDateString() : 'Just now';
                     
                     const div = document.createElement('div');
                     div.className = 'message-card';
-                    div.innerHTML = `
-                        <p style="word-break: break-word;">${msg.content}</p>
-                        <div class="message-meta">
-                            <span>${date} ${!msg.isRead ? '<span class="badge-new">NEW</span>' : ''}</span>
-                            <div>
-                                <button onclick="markRead('${docSnap.id}')" style="background:none; border:none; color:var(--secondary); font-weight:bold; cursor:pointer; margin-right:10px;">${!msg.isRead ? 'Mark Read' : ''}</button>
-                                <button onclick="deleteMsg('${docSnap.id}')" style="background:none; border:none; color:#ef4444; font-weight:bold; cursor:pointer;">Delete</button>
-                            </div>
+                    
+                    // Secure Rendering using textContent
+                    const p = document.createElement('p');
+                    p.style.wordBreak = "break-word";
+                    p.textContent = msg.content;
+                    
+                    const meta = document.createElement('div');
+                    meta.className = 'message-meta';
+                    meta.innerHTML = `
+                        <span>${date} ${!msg.isRead ? '<span class="badge-new">NEW</span>' : ''}</span>
+                        <div>
+                            ${!msg.isRead ? `<button onclick="markRead('${msg.id}')" style="background:none; border:none; color:var(--secondary); font-weight:bold; cursor:pointer; margin-right:10px;">Mark Read</button>` : ''}
+                            <button onclick="deleteMsg('${msg.id}')" style="background:none; border:none; color:#ef4444; font-weight:bold; cursor:pointer;">Delete</button>
                         </div>
                     `;
+                    
+                    div.appendChild(p);
+                    div.appendChild(meta);
                     container.appendChild(div);
                 });
 
-                document.getElementById('countTotal').innerText = snapshot.size;
+                document.getElementById('countTotal').innerText = msgs.length;
                 document.getElementById('countUnread').innerText = unreadCount;
+            }, (error) => {
+                console.error("Inbox Error:", error);
+                document.getElementById('inboxContainer').innerHTML = `<div class="empty-state">Error loading messages. Check console.</div>`;
             });
         }
 
+        // PUBLIC PROFILE (SENDING)
         async function showPublicProfile(username) {
             const userMap = await getDoc(doc(db, "usernames", username));
+            const view = document.getElementById('view-profile');
+            
             if (!userMap.exists()) {
-                document.getElementById('view-profile').innerHTML = '<div class="empty-state"><h2>User Not Found</h2><p>This username does not exist.</p><br><a href="#start" class="btn btn-primary">Create my own</a></div>';
+                view.innerHTML = '<div class="empty-state"><h2>User Not Found</h2><p>This handle is available.</p><br><a href="#start" class="btn btn-primary">Create mine</a></div>';
             } else {
                 const uid = userMap.data().uid;
-                const profileDoc = await getDoc(doc(db, "users", uid));
-                const data = profileDoc.data();
-                
+                const profile = await getDoc(doc(db, "users", uid));
+                const data = profile.data();
                 targetUser = { uid, ...data };
                 
                 document.getElementById('pubAvatar').innerText = data.displayName[0].toUpperCase();
                 document.getElementById('pubDisplayName').innerText = data.displayName;
                 document.getElementById('pubHandle').innerText = '@' + data.username;
             }
-            document.getElementById('view-profile').classList.add('active');
+            view.classList.add('active');
         }
 
         window.submitAnonymousMessage = async () => {
             const content = document.getElementById('msgContent').value.trim();
             const btn = document.getElementById('sendMsgBtn');
-
-            if (!content) return;
-            if (!targetUser) return;
+            if (!content || !targetUser) return;
 
             btn.disabled = true;
             btn.innerHTML = '<span class="loader"></span>';
@@ -660,18 +611,17 @@
                     reported: false,
                     createdAt: serverTimestamp()
                 });
-
                 document.getElementById('msgContent').value = '';
                 showToast("Message sent anonymously!");
-                btn.disabled = false;
-                btn.innerText = "Send Another";
             } catch (e) {
-                showToast("Failed to send message");
+                showToast("Failed to send");
+            } finally {
                 btn.disabled = false;
                 btn.innerText = "Send Anonymously";
             }
         };
 
+        // MESSAGE ACTIONS
         window.markRead = async (id) => {
             await updateDoc(doc(db, "messages", id), { isRead: true });
         };
@@ -683,45 +633,9 @@
         };
 
         window.handleLogout = async () => {
-            if (confirm("Are you sure? Since there is no email/password, you might lose access to this inbox if you clear browser data.")) {
+            if (confirm("Logout? Anonymous accounts are stored on this browser session.")) {
                 await signOut(auth);
                 window.location.hash = '#start';
-            }
-        };
-
-
-        window.processLogin = async () => {
-            const username = document.getElementById('loginUsernameInput').value.toLowerCase().trim().replace('@', '');
-            const password = document.getElementById('loginPasswordInput').value;
-            const btn = document.getElementById('loginBtn');
-
-            if (!username || !password) {
-                showToast("Enter username and password");
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loader"></span>';
-
-            try {
-                const mapping = await getDoc(doc(db, "usernames", username));
-                if (!mapping.exists()) {
-                    showToast("Username not found");
-                    btn.disabled = false;
-                    btn.innerText = "Login";
-                    return;
-                }
-
-                const email = `${username}@anonbox.local`;
-                await signInWithEmailAndPassword(auth, email, password);
-
-                showToast("Login successful!");
-                window.location.hash = '#dashboard';
-            } catch (e) {
-                console.error(e);
-                showToast("Wrong username or password");
-                btn.disabled = false;
-                btn.innerText = "Login";
             }
         };
 
@@ -735,18 +649,12 @@
 
         window.copyLink = () => {
             const link = document.getElementById('shareLinkInput').value;
-            navigator.clipboard.writeText(link).then(() => {
-                showToast("Link copied to clipboard!");
-            });
+            navigator.clipboard.writeText(link).then(() => showToast("Link copied!"));
         };
 
         window.openShareModal = () => {
             if (navigator.share) {
-                navigator.share({
-                    title: 'AnonBox',
-                    text: 'Send me anonymous messages!',
-                    url: document.getElementById('shareLinkInput').value
-                }).catch(console.error);
+                navigator.share({ title: 'AnonBox', url: document.getElementById('shareLinkInput').value }).catch(() => {});
             } else {
                 document.getElementById('shareModal').style.display = 'flex';
             }
@@ -754,14 +662,12 @@
 
         window.closeShareModal = () => document.getElementById('shareModal').style.display = 'none';
 
-        // TextArea char counter
         document.getElementById('msgContent').addEventListener('input', function() {
             document.getElementById('charCounter').innerText = `${this.value.length} / 300`;
         });
 
         // Initialize
         handleRouting();
-
     </script>
 </body>
 </html>
