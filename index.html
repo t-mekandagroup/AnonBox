@@ -183,6 +183,159 @@
         }
 
         .empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); }
+
+        /* NGL-STYLE SHARE SYSTEM */
+        .share-story-card {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            max-height: 520px;
+            border-radius: 28px;
+            background:
+                radial-gradient(circle at 25% 20%, rgba(255,255,255,.35), transparent 28%),
+                radial-gradient(circle at 75% 35%, rgba(255,59,92,.35), transparent 30%),
+                linear-gradient(160deg, #1d4f6b 0%, #78636f 45%, #172936 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 30px 20px;
+            box-shadow: 0 18px 45px rgba(0,0,0,.45);
+            overflow: hidden;
+            position: relative;
+        }
+        .share-story-card::before {
+            content: '';
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border: 4px solid rgba(255,255,255,.85);
+            border-radius: 50%;
+            top: 12%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .share-envelope {
+            width: 92px;
+            height: 72px;
+            background: linear-gradient(145deg, #fff, #dbe4ee);
+            border-radius: 18px;
+            position: relative;
+            margin-bottom: 135px;
+            box-shadow: 0 10px 25px rgba(0,0,0,.28);
+            z-index: 1;
+        }
+        .share-envelope::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            top: 7px;
+            height: 48px;
+            background: linear-gradient(135deg, transparent 49%, #c7d1dc 50%, transparent 51%),
+                        linear-gradient(225deg, transparent 49%, #c7d1dc 50%, transparent 51%);
+            opacity: .8;
+        }
+        .share-notification-dot {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #ff3156;
+            right: -8px;
+            top: -10px;
+            box-shadow: 0 4px 10px rgba(255,49,86,.5);
+        }
+        .story-title {
+            font-size: clamp(2rem, 8vw, 3.2rem);
+            line-height: 1.02;
+            font-weight: 800;
+            color: #fff;
+            text-shadow: 0 7px 14px rgba(0,0,0,.35);
+            margin-bottom: 38px;
+            z-index: 1;
+        }
+        .story-link-pill {
+            background: rgba(255,255,255,.92);
+            color: #2a77a8;
+            border-radius: 14px;
+            padding: 13px 22px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 42px;
+            box-shadow: 0 7px 16px rgba(0,0,0,.22);
+            z-index: 1;
+        }
+        .story-brand {
+            font-size: 1.55rem;
+            font-weight: 900;
+            color: white;
+            letter-spacing: .5px;
+            text-shadow: 0 5px 12px rgba(0,0,0,.35);
+            z-index: 1;
+        }
+        .story-sub {
+            color: rgba(255,255,255,.8);
+            font-weight: 600;
+            margin-top: 5px;
+            z-index: 1;
+        }
+        .platform-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 16px auto;
+            padding: 7px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.12);
+            color: var(--text-dim);
+            font-size: .85rem;
+            font-weight: 700;
+        }
+        .tutorial-steps {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin: 16px 0 22px;
+        }
+        .tutorial-step-dot {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #d7dce3;
+            color: #1e293b;
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+        .tutorial-step-dot.active {
+            background: #111827;
+            color: white;
+        }
+        .tutorial-demo {
+            width: 100%;
+            min-height: 210px;
+            border-radius: 22px;
+            background: linear-gradient(145deg, #dce4ee, #8b9aac);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 18px 0;
+            padding: 20px;
+            color: #111827;
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: 800;
+        }
+        .tutorial-nav {
+            display: flex;
+            gap: 10px;
+        }
+        .tutorial-nav button { margin-bottom: 0; }
+
     </style>
 </head>
 <body>
@@ -332,17 +485,51 @@
         </div>
 
     </div>
+    <!-- NGL-STYLE SHARE MODAL -->
+    <div id="shareModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:2000; padding:18px; overflow-y:auto;">
+        <div style="width:100%; max-width:430px; margin:0 auto; padding:15px 0 30px;">
+            <button class="btn btn-outline" style="margin-bottom:14px;" onclick="closeShareModal()">← Back</button>
 
-    <!-- SHARE MODAL -->
-    <div id="shareModal" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; padding: 20px; flex-direction: column; align-items: center; justify-content: center;">
-        <div class="card" style="width: 100%; max-width: 350px; background: linear-gradient(135deg, #6B4EE6, #FF3B5C); color: white; text-align: center;">
-            <p style="font-weight: 800; font-size: 1.5rem; margin-bottom: 10px;">ASKLY</p>
-            <p style="margin-bottom: 20px;">send me anonymous messages!</p>
-            <p style="font-size: 2rem; margin-bottom: 20px;">ask me anything 👀</p>
-            <p style="background: rgba(0,0,0,0.2); display: inline-block; padding: 5px 15px; border-radius: 50px;" id="shareUsername">@username</p>
+            <div id="storyPreview" class="share-story-card">
+                <div class="share-envelope">
+                    <span class="share-notification-dot"></span>
+                </div>
+                <div class="story-title">send me<br>anonymous<br>messages!</div>
+                <div class="story-link-pill">🔗 ANONBOX.LINK</div>
+                <div class="story-brand">ANONBOX</div>
+                <div class="story-sub">anonymous q&amp;a</div>
+            </div>
+
+            <div class="platform-badge">Selected platform: <span id="sharePlatformName" style="margin-left:5px;color:white;">Instagram</span></div>
+
+            <button class="btn btn-primary" onclick="shareStoryCard()">📤 Share Story Card</button>
+            <button class="btn btn-outline" onclick="copyLink()">🔗 Copy Link</button>
+            <button class="btn btn-outline" onclick="showTutorial()">❓ How to add the link to your story</button>
+
+            <p style="text-align:center;color:var(--text-dim);font-size:.75rem;margin-top:12px;">
+                Share the card, then add your AnonBox link using your app's Link/URL feature.
+            </p>
         </div>
-        <button class="btn btn-primary" style="max-width: 350px;" onclick="copyLink()">Copy Link</button>
-        <button class="btn btn-outline" style="max-width: 350px;" onclick="closeShareModal()">Close</button>
+    </div>
+
+    <!-- STORY LINK TUTORIAL -->
+    <div id="tutorialModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:3000; padding:18px; align-items:center; justify-content:center;">
+        <div class="card" style="width:100%; max-width:430px; background:#f8fafc; color:#111827; margin:0;">
+            <h2 style="text-align:center;font-size:1.7rem;line-height:1.15;">How to add the Link to your story</h2>
+            <div class="tutorial-steps">
+                <div class="tutorial-step-dot active">1</div>
+                <div class="tutorial-step-dot">2</div>
+                <div class="tutorial-step-dot">3</div>
+                <div class="tutorial-step-dot">4</div>
+            </div>
+            <h3 id="tutorialTitle" style="text-align:center;font-size:1.25rem;">Create your Story</h3>
+            <div id="tutorialDemo" class="tutorial-demo">Open your selected app and create a new Story.</div>
+            <div class="tutorial-nav">
+                <button id="tutorialBackBtn" class="btn" style="background:#e2e8f0;color:#111827;display:none;" onclick="prevTutorialStep()">Back</button>
+                <button id="tutorialNextBtn" class="btn" style="background:#050505;color:white;" onclick="nextTutorialStep()">Next Step</button>
+            </div>
+            <button class="btn btn-outline" style="color:#334155;border-color:#cbd5e1;margin-top:10px;margin-bottom:0;" onclick="closeTutorial()">Close</button>
+        </div>
     </div>
 
     <div id="toast">Message copied!</div>
@@ -652,15 +839,197 @@
             navigator.clipboard.writeText(link).then(() => showToast("Link copied!"));
         };
 
+        // NGL-STYLE SHARE + STORY CARD
         window.openShareModal = () => {
-            if (navigator.share) {
-                navigator.share({ title: 'AnonBox', url: document.getElementById('shareLinkInput').value }).catch(() => {});
-            } else {
-                document.getElementById('shareModal').style.display = 'flex';
+            const platform = (userData && userData.platform) ? userData.platform : selectedPlatform;
+            document.getElementById('sharePlatformName').innerText = platform || 'Other';
+            document.getElementById('shareModal').style.display = 'block';
+        };
+
+        window.closeShareModal = () => {
+            document.getElementById('shareModal').style.display = 'none';
+        };
+
+        async function createStoryCardFile() {
+            const name = (userData && userData.displayName) ? userData.displayName : 'AnonBox User';
+            const handle = (userData && userData.username) ? '@' + userData.username : '@anonbox';
+            const canvas = document.createElement('canvas');
+            canvas.width = 1080;
+            canvas.height = 1920;
+            const ctx = canvas.getContext('2d');
+
+            const bg = ctx.createLinearGradient(0, 0, 1080, 1920);
+            bg.addColorStop(0, '#1d4f6b');
+            bg.addColorStop(.5, '#78636f');
+            bg.addColorStop(1, '#172936');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, 1080, 1920);
+
+            const glow1 = ctx.createRadialGradient(250, 350, 20, 250, 350, 420);
+            glow1.addColorStop(0, 'rgba(255,255,255,.28)');
+            glow1.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = glow1;
+            ctx.fillRect(0, 0, 1080, 1920);
+
+            // Circle + envelope icon
+            ctx.strokeStyle = 'rgba(255,255,255,.9)';
+            ctx.lineWidth = 10;
+            ctx.beginPath();
+            ctx.arc(540, 500, 230, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.fillStyle = '#eef2f6';
+            ctx.beginPath();
+            ctx.roundRect(390, 445, 300, 220, 35);
+            ctx.fill();
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 5;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(410, 470);
+            ctx.lineTo(540, 575);
+            ctx.lineTo(670, 470);
+            ctx.stroke();
+
+            ctx.fillStyle = '#ff3156';
+            ctx.beginPath();
+            ctx.arc(690, 430, 42, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#fff';
+            ctx.shadowColor = 'rgba(0,0,0,.35)';
+            ctx.shadowBlur = 18;
+            ctx.font = '900 90px Inter, Arial, sans-serif';
+            ['send me', 'anonymous', 'messages!'].forEach((line, i) => ctx.fillText(line, 540, 900 + i * 105));
+
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = 'rgba(255,255,255,.94)';
+            ctx.beginPath();
+            ctx.roundRect(250, 1240, 580, 120, 28);
+            ctx.fill();
+            ctx.fillStyle = '#2a77a8';
+            ctx.font = '800 48px Inter, Arial, sans-serif';
+            ctx.fillText('🔗 ANONBOX.LINK', 540, 1315);
+
+            ctx.fillStyle = '#fff';
+            ctx.font = '900 58px Inter, Arial, sans-serif';
+            ctx.fillText('ANONBOX', 540, 1620);
+            ctx.fillStyle = 'rgba(255,255,255,.8)';
+            ctx.font = '600 38px Inter, Arial, sans-serif';
+            ctx.fillText('anonymous q&a', 540, 1685);
+
+            ctx.fillStyle = 'rgba(255,255,255,.72)';
+            ctx.font = '600 30px Inter, Arial, sans-serif';
+            ctx.fillText(handle + ' • ' + name, 540, 1810);
+
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+            return new File([blob], 'anonbox-story.png', { type: 'image/png' });
+        }
+
+        window.shareStoryCard = async () => {
+            try {
+                const file = await createStoryCardFile();
+                const link = document.getElementById('shareLinkInput').value;
+                const platform = (userData && userData.platform) ? userData.platform : selectedPlatform;
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        title: 'Send me anonymous messages!',
+                        text: 'Add my AnonBox link: ' + link + ' • Choose ' + (platform || 'your app') + ' in the share menu.',
+                        url: link,
+                        files: [file]
+                    });
+                } else {
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(file);
+                    a.download = 'anonbox-story.png';
+                    a.click();
+                    URL.revokeObjectURL(a.href);
+                    await navigator.clipboard.writeText(link).catch(() => {});
+                    showToast('Story card saved and link copied!');
+                }
+            } catch (e) {
+                if (e && e.name !== 'AbortError') {
+                    console.error(e);
+                    showToast('Could not open sharing. Try Copy Link.');
+                }
             }
         };
 
-        window.closeShareModal = () => document.getElementById('shareModal').style.display = 'none';
+        let tutorialStep = 0;
+
+        function getTutorialSteps() {
+            const platform = (userData && userData.platform) ? userData.platform : selectedPlatform;
+            const app = platform || 'your selected app';
+
+            if (platform === 'WhatsApp') {
+                return [
+                    ['Create your Status', 'Open WhatsApp and tap Status, then create a new Status.'],
+                    ['Add the Story Card', 'Choose the AnonBox Story Card you just shared or saved.'],
+                    ['Copy your AnonBox link', 'Tap Copy Link in AnonBox and copy your personal link.'],
+                    ['Share your link', 'Add or send your link where WhatsApp supports it, then post your Status.']
+                ];
+            }
+
+            if (platform === 'Snapchat') {
+                return [
+                    ['Create a Snap', 'Open Snapchat and create a new Snap or Story.'],
+                    ['Add the Story Card', 'Choose the AnonBox Story Card from your photos if needed.'],
+                    ['Add your Link', 'Use Snapchat’s available link/attachment option and paste your AnonBox link.'],
+                    ['Post to your Story', 'Check everything, then share it to My Story.']
+                ];
+            }
+
+            return [
+                ['Create your Story', 'Open ' + app + ' and create a new Story.'],
+                ['Add the Story Card', 'Use the AnonBox Story Card you just shared or saved to your device.'],
+                ['Add the Link', 'Tap the sticker/tools button, choose the Link option if available, and paste your AnonBox link.'],
+                ['Share your Story!', 'Publish the Story. People can tap your link and send you anonymous messages!']
+            ];
+        }
+
+        function renderTutorial() {
+            const steps = getTutorialSteps();
+            const [title, demo] = steps[tutorialStep];
+            document.getElementById('tutorialTitle').innerText = 'Step ' + (tutorialStep + 1) + ': ' + title;
+            document.getElementById('tutorialDemo').innerText = demo;
+
+            document.querySelectorAll('.tutorial-step-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === tutorialStep);
+            });
+
+            document.getElementById('tutorialBackBtn').style.display = tutorialStep === 0 ? 'none' : 'block';
+            document.getElementById('tutorialNextBtn').innerText = tutorialStep === steps.length - 1 ? 'Done' : 'Next Step';
+        }
+
+        window.showTutorial = () => {
+            tutorialStep = 0;
+            renderTutorial();
+            document.getElementById('tutorialModal').style.display = 'flex';
+        };
+
+        window.closeTutorial = () => {
+            document.getElementById('tutorialModal').style.display = 'none';
+        };
+
+        window.nextTutorialStep = () => {
+            const steps = getTutorialSteps();
+            if (tutorialStep >= steps.length - 1) {
+                closeTutorial();
+            } else {
+                tutorialStep++;
+                renderTutorial();
+            }
+        };
+
+        window.prevTutorialStep = () => {
+            if (tutorialStep > 0) {
+                tutorialStep--;
+                renderTutorial();
+            }
+        };
 
         document.getElementById('msgContent').addEventListener('input', function() {
             document.getElementById('charCounter').innerText = `${this.value.length} / 300`;
