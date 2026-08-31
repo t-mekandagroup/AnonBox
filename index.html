@@ -485,6 +485,7 @@
         </div>
 
     </div>
+
     <!-- NGL-STYLE SHARE MODAL -->
     <div id="shareModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:2000; padding:18px; overflow-y:auto;">
         <div style="width:100%; max-width:430px; margin:0 auto; padding:15px 0 30px;">
@@ -834,9 +835,36 @@
             setTimeout(() => t.style.display = 'none', 3000);
         };
 
-        window.copyLink = () => {
-            const link = document.getElementById('shareLinkInput').value;
-            navigator.clipboard.writeText(link).then(() => showToast("Link copied!"));
+        window.copyLink = async () => {
+            const input = document.getElementById('shareLinkInput');
+            const link = input ? input.value : '';
+            if (!link) {
+                showToast("Link is not ready yet");
+                return;
+            }
+
+            try {
+                // Modern Clipboard API works on HTTPS / supported browsers.
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(link);
+                } else {
+                    // Fallback for Blogger, file previews, and older mobile browsers.
+                    input.removeAttribute('readonly');
+                    input.focus();
+                    input.select();
+                    input.setSelectionRange(0, link.length);
+                    const copied = document.execCommand('copy');
+                    input.setAttribute('readonly', 'readonly');
+                    if (!copied) throw new Error('Copy command failed');
+                }
+                showToast("Link copied!");
+            } catch (error) {
+                // Last fallback: select the link so the user can copy it manually.
+                input.focus();
+                input.select();
+                input.setSelectionRange(0, link.length);
+                showToast("Link selected — tap Copy");
+            }
         };
 
         // NGL-STYLE SHARE + STORY CARD
