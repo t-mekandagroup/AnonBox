@@ -835,11 +835,27 @@
             setTimeout(() => t.style.display = 'none', 3000);
         };
 
+        function getReadyShareLink() {
+            const input = document.getElementById('shareLinkInput');
+
+            // If the dashboard has already created the link, use it.
+            if (input && input.value && input.value.trim()) return input.value.trim();
+
+            // Otherwise generate it directly from the logged-in user's username.
+            if (userData && userData.username) {
+                const link = window.location.origin + window.location.pathname + '#@' + userData.username;
+                if (input) input.value = link;
+                return link;
+            }
+
+            return '';
+        }
+
         window.copyLink = async () => {
             const input = document.getElementById('shareLinkInput');
-            const link = input ? input.value : '';
+            const link = getReadyShareLink();
             if (!link) {
-                showToast("Link is not ready yet");
+                showToast("Please open your dashboard first");
                 return;
             }
 
@@ -869,6 +885,8 @@
 
         // NGL-STYLE SHARE + STORY CARD
         window.openShareModal = () => {
+            const readyLink = getReadyShareLink();
+            if (!readyLink) { showToast('Please open your dashboard first'); return; }
             const platform = (userData && userData.platform) ? userData.platform : selectedPlatform;
             document.getElementById('sharePlatformName').innerText = platform || 'Other';
             document.getElementById('shareModal').style.display = 'block';
@@ -906,7 +924,7 @@
             ctx.arc(540, 500, 230, 0, Math.PI * 2);
             ctx.stroke();
 
-            ctx.fillStyle = '#eef2f6';
+             ctx.fillStyle = '#eef2f6';
             ctx.beginPath();
             ctx.roundRect(390, 445, 300, 220, 35);
             ctx.fill();
@@ -959,7 +977,8 @@
         window.shareStoryCard = async () => {
             try {
                 const file = await createStoryCardFile();
-                const link = document.getElementById('shareLinkInput').value;
+                const link = getReadyShareLink();
+                if (!link) { showToast('Please open your dashboard first'); return; }
                 const platform = (userData && userData.platform) ? userData.platform : selectedPlatform;
 
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
