@@ -698,7 +698,7 @@
             document.getElementById('dashAvatar').innerText = userData.displayName[0].toUpperCase();
             document.getElementById('dashDisplayName').innerText = userData.displayName;
             document.getElementById('dashHandle').innerText = '@' + userData.username;
-            document.getElementById('shareUsername').innerText = '@' + userData.username;
+            // Story/share UI does not use a #shareUsername element; keep dashboard loading.
             
             const link = window.location.origin + window.location.pathname + '#@' + userData.username;
             document.getElementById('shareLinkInput').value = link;
@@ -745,6 +745,7 @@
                     meta.innerHTML = `
                         <span>${date} ${!msg.isRead ? '<span class="badge-new">NEW</span>' : ''}</span>
                         <div>
+                            <button onclick="shareMessageStory('${msg.id}')" style="background:none; border:none; color:var(--secondary); font-weight:bold; cursor:pointer; margin-right:10px;">Share Story</button>
                             ${!msg.isRead ? `<button onclick="markRead('${msg.id}')" style="background:none; border:none; color:var(--secondary); font-weight:bold; cursor:pointer; margin-right:10px;">Mark Read</button>` : ''}
                             <button onclick="deleteMsg('${msg.id}')" style="background:none; border:none; color:#ef4444; font-weight:bold; cursor:pointer;">Delete</button>
                         </div>
@@ -807,6 +808,37 @@
                 btn.disabled = false;
                 btn.innerText = "Send Anonymously";
             }
+        };
+
+
+        // SHARE RECEIVED MESSAGE AS STORY CARD
+        window.shareMessageStory = async (id) => {
+            try {
+                const messageDoc = await getDoc(doc(db, 'messages', id));
+                if (!messageDoc.exists()) { showToast('Message not found'); return; }
+                const message = messageDoc.data().content || '';
+                const canvas = document.createElement('canvas');
+                canvas.width = 1080; canvas.height = 1920;
+                const ctx = canvas.getContext('2d');
+                const bg = ctx.createLinearGradient(0, 0, 1080, 1920);
+                bg.addColorStop(0, '#FF3B5C'); bg.addColorStop(1, '#6B4EE6');
+                ctx.fillStyle = bg; ctx.fillRect(0, 0, 1080, 1920);
+                ctx.fillStyle = 'rgba(255,255,255,.12)'; ctx.beginPath(); ctx.arc(160, 200, 260, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
+                ctx.font = '900 72px Arial, sans-serif'; ctx.fillText('ANONYMOUS MESSAGE', 540, 240);
+                ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(90, 380, 900, 850, 45); ctx.fill();
+                ctx.fillStyle = '#1e293b'; ctx.font = '700 52px Arial, sans-serif';
+                const words = message.split(/\s+/); let lines=[], line='';
+                for (const word of words) { const test=(line+' '+word).trim(); if (ctx.measureText(test).width>760 && line) { lines.push(line); line=word; } else line=test; }
+                if(line) lines.push(line);
+                let y=560; lines.slice(0,12).forEach(l=>{ctx.fillText(l,540,y); y+=75;});
+                ctx.fillStyle='#fff'; ctx.font='800 48px Arial, sans-serif'; ctx.fillText('@'+(userData?.username || 'anonbox'),540,1510);
+                ctx.font='600 34px Arial, sans-serif'; ctx.fillText('Send me anonymous messages!',540,1580);
+                const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
+                const file=new File([blob],'anonbox-message-story.png',{type:'image/png'});
+                if(navigator.canShare && navigator.canShare({files:[file]})) await navigator.share({title:'Anonymous Message',files:[file]});
+                else { const a=document.createElement('a'); a.href=URL.createObjectURL(file); a.download='anonbox-message-story.png'; a.click(); URL.revokeObjectURL(a.href); showToast('Story card saved!'); }
+            } catch(e) { console.error(e); showToast('Could not create story card'); }
         };
 
         // MESSAGE ACTIONS
@@ -924,7 +956,7 @@
             ctx.arc(540, 500, 230, 0, Math.PI * 2);
             ctx.stroke();
 
-             ctx.fillStyle = '#eef2f6';
+            ctx.fillStyle = '#eef2f6';
             ctx.beginPath();
             ctx.roundRect(390, 445, 300, 220, 35);
             ctx.fill();
