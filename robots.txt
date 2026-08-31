@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://anonboxx.netlify.app/sitemap.xml
+Sitemap: https://anoonboxx.netlify.app/sitemap.xml
