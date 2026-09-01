@@ -342,22 +342,25 @@
 
     <div class="app-container">
 
-        <!-- AD #1 — TOP (300x250 Banner) -->
-<div class="app-container">
+        <!-- AD #1 — Native Banner -->
+        <div class="ad-native-container">
+            <script async="async" data-cfasync="false" src="https://arkgleamfox.com/21c26d166cc111c4d60de05de9497689/invoke.js"></script>
+            <div id="container-21c26d166cc111c4d60de05de9497689"></div>
+        </div>
 
-    <!-- AD #1 — TOP (320x50 Banner) -->
-    <div class="ad-top-banner">
-        <script>
-            atOptions = {
+        <!-- AD #2 — 320x50 Banner -->
+        <div class="ad-top-banner" style="min-height:50px; margin-bottom:20px;">
+            <script>
+              atOptions = {
                 'key' : '7f056177939df64336f72ad894781e42',
                 'format' : 'iframe',
                 'height' : 50,
                 'width' : 320,
                 'params' : {}
-            };
-        </script>
-        <script src="https://arkgleamfox.com/7f056177939df64336f72ad894781e42/invoke.js"></script>
-    </div>
+              };
+            </script>
+            <script src="https://arkgleamfox.com/7f056177939df64336f72ad894781e42/invoke.js"></script>
+        </div>
 
         <!-- START VIEW -->
         <div id="view-start" class="view">
@@ -402,8 +405,8 @@
 
             <!-- AD #2 — BELOW LOGIN / REGISTER (Native Banner) -->
             <div class="ad-native-container">
-                <script async="async" data-cfasync="false" src="https://arkgleamfox.com/73913bd6b1f3b550d12d5b5281c3ecc6/invoke.js"></script>
-                <div id="container-73913bd6b1f3b550d12d5b5281c3ecc6"></div>
+                <script async="async" data-cfasync="false" src="https://arkgleamfox.com/21c26d166cc111c4d60de05de9497689/invoke.js"></script>
+                <div id="container-21c26d166cc111c4d60de05de9497689"></div>
             </div>
         </div>
 
@@ -426,8 +429,8 @@
 
             <!-- AD #2 — BELOW LOGIN / REGISTER (Native Banner) -->
             <div class="ad-native-container">
-                <script async="async" data-cfasync="false" src="https://arkgleamfox.com/73913bd6b1f3b550d12d5b5281c3ecc6/invoke.js"></script>
-                <div id="container-73913bd6b1f3b550d12d5b5281c3ecc6"></div>
+                <script async="async" data-cfasync="false" src="https://arkgleamfox.com/21c26d166cc111c4d60de05de9497689/invoke.js"></script>
+                <div id="container-21c26d166cc111c4d60de05de9497689"></div>
             </div>
         </div>
 
@@ -879,7 +882,7 @@
             }
         };
 
-                // UI HELPERS
+        // UI HELPERS
         window.showToast = (msg) => {
             const t = document.getElementById('toast');
             t.innerText = msg;
