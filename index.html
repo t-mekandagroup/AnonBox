@@ -48,7 +48,7 @@
             margin-bottom: 20px;
             display: flex;
             justify-content: center;
-            min-height: 250px;
+            min-height: 50px;
         }
 
         .ad-native-container {
@@ -342,22 +342,16 @@
 
     <div class="app-container">
 
-        <!-- AD #1 — Native Banner -->
-        <div class="ad-native-container">
-            <script async="async" data-cfasync="false" src="https://arkgleamfox.com/21c26d166cc111c4d60de05de9497689/invoke.js"></script>
-            <div id="container-21c26d166cc111c4d60de05de9497689"></div>
-        </div>
-
-        <!-- AD #2 — 320x50 Banner -->
-        <div class="ad-top-banner" style="min-height:50px; margin-bottom:20px;">
+        <!-- AD #1 — TOP (320x50 Banner) -->
+        <div class="ad-top-banner">
             <script>
-              atOptions = {
-                'key' : '7f056177939df64336f72ad894781e42',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-              };
+                atOptions = {
+                    'key' : '7f056177939df64336f72ad894781e42',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
             </script>
             <script src="https://arkgleamfox.com/7f056177939df64336f72ad894781e42/invoke.js"></script>
         </div>
@@ -395,6 +389,12 @@
                 <small id="usernameStatus" style="display:block; margin-top: 8px; font-size: 0.8rem;"></small>
             </div>
 
+            <!-- AD #2 — NATIVE BANNER BELOW USERNAME -->
+            <div class="ad-native-container">
+                <script async="async" data-cfasync="false" src="https://arkgleamfox.com/21c26d166cc111c4d60de05de9497689/invoke.js"></script>
+                <div id="container-21c26d166cc111c4d60de05de9497689"></div>
+            </div>
+
             <div class="input-group">
                 <label>DISPLAY NAME (Optional)</label>
                 <input type="text" id="displayNameInput" class="input-main" placeholder="e.g. Roshan">
@@ -402,12 +402,6 @@
 
             <button id="createAccountBtn" class="btn btn-primary" onclick="processSignup()">Create Account</button>
             <button class="btn btn-outline" onclick="navigateTo('start')">Back</button>
-
-            <!-- AD #2 — BELOW LOGIN / REGISTER (Native Banner) -->
-            <div class="ad-native-container">
-                <script async="async" data-cfasync="false" src="https://arkgleamfox.com/21c26d166cc111c4d60de05de9497689/invoke.js"></script>
-                <div id="container-21c26d166cc111c4d60de05de9497689"></div>
-            </div>
         </div>
 
         <!-- LOGIN VIEW -->
@@ -426,12 +420,6 @@
             <p style="font-size: 0.8rem; color: var(--text-dim); text-align: center; margin-top: 15px;">
                 Note: Anonymous accounts are tied to your current browser session.
             </p>
-
-            <!-- AD #2 — BELOW LOGIN / REGISTER (Native Banner) -->
-            <div class="ad-native-container">
-                <script async="async" data-cfasync="false" src="https://arkgleamfox.com/21c26d166cc111c4d60de05de9497689/invoke.js"></script>
-                <div id="container-21c26d166cc111c4d60de05de9497689"></div>
-            </div>
         </div>
 
         <!-- DASHBOARD -->
@@ -472,6 +460,13 @@
 
         <!-- PUBLIC PROFILE VIEW (MESSAGING) -->
         <div id="view-profile" class="view">
+
+            <!-- NATIVE BANNER — SHOWN TO FRIENDS BEFORE SENDING A MESSAGE -->
+            <div class="ad-native-container">
+                <script async="async" data-cfasync="false" src="https://arkgleamfox.com/21c26d166cc111c4d60de05de9497689/invoke.js"></script>
+                <div id="container-21c26d166cc111c4d60de05de9497689"></div>
+            </div>
+
             <div class="profile-header">
                 <div class="avatar-circle" id="pubAvatar">?</div>
                 <h2 id="pubDisplayName">...</h2>
