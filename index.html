@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AnonBox — Send & Receive Anonymous Messages Online</title>
 
-    <!-- SEO -->
-    <meta name="description" content="AnonBox lets you create a personal link to receive anonymous messages from friends. Share your link and receive anonymous messages online.">
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <meta name="author" content="AnonBox">
-    <meta name="theme-color" content="#0f172a">
+    <!-- SEO Meta Description -->
+    <meta name="description" content="Send and receive anonymous messages online with AnonBox. Create your personal anonymous message link and receive messages from friends.">
 
-    <!-- Social Sharing -->
+    <!-- SEO Keywords -->
+    <meta name="keywords" content="anonymous messages, anonymous message, send anonymous message, receive anonymous messages, anonymous questions, anonymous message link, AnonBox">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta name="theme-color" content="#0f172a">
     <meta property="og:type" content="website">
     <meta property="og:title" content="AnonBox — Send & Receive Anonymous Messages">
     <meta property="og:description" content="Create your personal AnonBox link and receive anonymous messages from friends.">
@@ -19,9 +19,16 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="AnonBox — Anonymous Messages">
     <meta name="twitter:description" content="Create your personal anonymous message link with AnonBox.">
-
-    <!-- SEO Keywords (secondary; not a Google ranking factor) -->
-    <meta name="keywords" content="anonymous messages, anonymous message, send anonymous message, receive anonymous messages, anonymous questions, anonymous message link, AnonBox">
+    <link rel="canonical" href="/">
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"WebApplication",
+      "name":"AnonBox",
+      "applicationCategory":"SocialNetworkingApplication",
+      "description":"Send and receive anonymous messages online with a personal AnonBox link."
+    }
+    </script>
     
     <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -355,18 +362,6 @@
         .tutorial-nav button { margin-bottom: 0; }
 
     </style>
-
-    <!-- Structured data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "AnonBox",
-      "applicationCategory": "SocialNetworkingApplication",
-      "description": "Create a personal link to receive anonymous messages online.",
-      "operatingSystem": "Any"
-    }
-    </script>
 </head>
 <body>
 
@@ -426,14 +421,14 @@
             </div>
 
             <div class="input-group">
-                <label>PASSWORD</label>
-                <input type="password" id="signupPasswordInput" class="input-main" placeholder="At least 6 characters" autocomplete="new-password">
-                <small style="display:block; margin-top:8px; color:var(--text-dim);">Required for secure login from other devices.</small>
+                <label>DISPLAY NAME (Optional)</label>
+                <input type="text" id="displayNameInput" class="input-main" placeholder="e.g. Roshan">
             </div>
 
             <div class="input-group">
-                <label>DISPLAY NAME (Optional)</label>
-                <input type="text" id="displayNameInput" class="input-main" placeholder="e.g. Roshan">
+                <label>PASSWORD</label>
+                <input type="password" id="signupPasswordInput" class="input-main" placeholder="At least 6 characters" autocomplete="new-password" minlength="6">
+                <small style="display:block;margin-top:8px;color:var(--text-dim);font-size:.8rem;">Use this password to log in from another phone or browser.</small>
             </div>
 
             <button id="createAccountBtn" class="btn btn-primary" onclick="processSignup()">Create Account</button>
@@ -452,14 +447,14 @@
 
             <div class="input-group">
                 <label>PASSWORD</label>
-                <input type="password" id="loginPasswordInput" class="input-main" placeholder="Enter your password" autocomplete="current-password">
+                <input type="password" id="loginPasswordInput" class="input-main" placeholder="Your password" autocomplete="current-password">
             </div>
 
             <button id="loginBtn" class="btn btn-primary" onclick="processLogin()">Login</button>
             <button class="btn btn-outline" onclick="navigateTo('start')">Back</button>
 
             <p style="font-size: 0.8rem; color: var(--text-dim); text-align: center; margin-top: 15px;">
-                Use the username and password you created. You can now log in from another phone or browser.
+                Use the username and password you created to log in from any supported device or browser.
             </p>
         </div>
 
@@ -482,15 +477,6 @@
                 </div>
             </div>
 
-            <div class="card" id="accountSecurityCard">
-                <h3 style="margin-bottom:8px;">🔐 Account Login</h3>
-                <p id="accountSecurityText" style="color:var(--text-dim);font-size:.85rem;margin-bottom:14px;">Set a password so you can log in from another phone or browser.</p>
-                <div class="input-group" style="margin-bottom:12px;">
-                    <input type="password" id="upgradePasswordInput" class="input-main" placeholder="At least 6 characters" autocomplete="new-password">
-                </div>
-                <button id="upgradePasswordBtn" class="btn btn-outline" style="margin-bottom:0;" onclick="upgradeAccountPassword()">Enable Login on Other Devices</button>
-            </div>
-
             <div class="card">
                 <label style="font-size: 0.7rem; font-weight: bold; color: var(--text-dim);">YOUR LINK</label>
                 <div style="display:flex; gap: 10px; margin-top: 10px;">
@@ -505,7 +491,8 @@
                 <div class="empty-state">Loading messages...</div>
             </div>
 
-            <button class="btn btn-outline" style="margin-top: 40px; color: #ef4444;" onclick="handleLogout()">Logout</button>
+            <button id="enablePasswordBtn" class="btn btn-outline" style="margin-top: 25px; margin-bottom: 10px;" onclick="enablePasswordLogin()">Enable Login on Other Devices</button>
+            <button class="btn btn-outline" style="margin-top: 15px; color: #ef4444;" onclick="handleLogout()">Logout</button>
         </div>
 
         <!-- PUBLIC PROFILE VIEW (MESSAGING) -->
@@ -589,7 +576,7 @@
     <!-- FIREBASE SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signOut, EmailAuthProvider, linkWithCredential, signInWithEmailAndPassword, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signOut, EmailAuthProvider, linkWithCredential, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // FIREBASE CONFIG (Kept exactly as provided)
@@ -616,6 +603,25 @@
         // ROUTER
         window.addEventListener('hashchange', handleRouting);
 
+        function usernameToEmail(username) {
+            return username.toLowerCase().trim().replace(/^@+/, '') + '@anonbox.local';
+        }
+
+        async function ensureUserData() {
+            if (!currentUser) return null;
+            if (userData && userData.username) return userData;
+            try {
+                const snap = await getDoc(doc(db, "users", currentUser.uid));
+                if (snap.exists()) {
+                    userData = snap.data();
+                    return userData;
+                }
+            } catch (e) {
+                console.error("Profile load error:", e);
+            }
+            return null;
+        }
+
         async function handleRouting() {
             const hash = window.location.hash || '#start';
             const allViews = document.querySelectorAll('.view');
@@ -624,43 +630,47 @@
             if (hash.startsWith('#@')) {
                 const username = hash.replace('#@', '').toLowerCase();
                 await showPublicProfile(username);
-            } else {
-                const viewId = 'view-' + hash.replace('#', '');
-                const targetView = document.getElementById(viewId);
-                
-                if (hash === '#dashboard') {
-                    if (!currentUser) { window.location.hash = '#start'; return; }
-                    loadDashboard();
-                }
-
-                if (targetView) targetView.classList.add('active');
+                return;
             }
+
+            if (hash === '#dashboard') {
+                if (!currentUser) {
+                    window.location.hash = '#start';
+                    return;
+                }
+                const profile = await ensureUserData();
+                if (!profile) {
+                    showToast('Could not load your account. Please try again.');
+                    window.location.hash = '#start';
+                    return;
+                }
+                const targetView = document.getElementById('view-dashboard');
+                if (targetView) targetView.classList.add('active');
+                await loadDashboard();
+                return;
+            }
+
+            const viewId = 'view-' + hash.replace('#', '');
+            const targetView = document.getElementById(viewId);
+            if (targetView) targetView.classList.add('active');
         }
 
         // AUTH OBSERVER
         onAuthStateChanged(auth, async (user) => {
+            currentUser = user || null;
+            userData = null;
+
+            if (inboxUnsubscribe) {
+                inboxUnsubscribe();
+                inboxUnsubscribe = null;
+            }
+
             if (user) {
-                currentUser = user;
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    userData = userDoc.data();
-                    setTimeout(() => {
-                        const securityText = document.getElementById('accountSecurityText');
-                        const securityBtn = document.getElementById('upgradePasswordBtn');
-                        const hasPassword = user.providerData?.some(p => p.providerId === 'password') || userData.authType === 'password';
-                        if (securityText && securityBtn && hasPassword) {
-                            securityText.innerText = "Password login is enabled. You can use this username and password on another device.";
-                            securityBtn.innerText = "Update Password";
-                        }
-                    }, 0);
-                    if (['#start', '#login', '#username', ''].includes(window.location.hash)) {
-                        window.location.hash = '#dashboard';
-                    }
+                const profile = await ensureUserData();
+                if (profile && ['#start', '#login', '#username', ''].includes(window.location.hash)) {
+                    window.location.hash = '#dashboard';
+                    return;
                 }
-            } else {
-                currentUser = null;
-                userData = null;
-                if (inboxUnsubscribe) { inboxUnsubscribe(); inboxUnsubscribe = null; }
             }
             handleRouting();
         });
@@ -683,14 +693,13 @@
             const status = document.getElementById('usernameStatus');
 
             if (username.length < 3) { showToast("Username too short"); return; }
-            if (!/^[a-z0-9._-]+$/.test(username)) { showToast("Use only letters, numbers, dot, underscore or hyphen"); return; }
+            if (!/^[a-z0-9._-]+$/.test(username)) { showToast("Use only letters, numbers, dots, underscores or hyphens"); return; }
             if (password.length < 6) { showToast("Password must be at least 6 characters"); return; }
-            
+
             btn.disabled = true;
             btn.innerHTML = '<span class="loader"></span>';
 
             try {
-                // 1. Check Uniqueness
                 const userMapping = await getDoc(doc(db, "usernames", username));
                 if (userMapping.exists()) {
                     status.innerText = "Username already taken";
@@ -700,36 +709,49 @@
                     return;
                 }
 
-                // 2. Create an anonymous Firebase session first, then upgrade it
-                // to email/password auth. The synthetic email stays private.
-                if (currentUser) await signOut(auth);
-                const cred = await signInAnonymously(auth);
-                const uid = cred.user.uid;
-                const syntheticEmail = username + "@anonbox.app";
-                const emailCredential = EmailAuthProvider.credential(syntheticEmail, password);
-                await linkWithCredential(cred.user, emailCredential);
+                // Reuse the current anonymous user when possible, so the account keeps its existing UID.
+                let user = currentUser;
+                if (!user) {
+                    const cred = await signInAnonymously(auth);
+                    user = cred.user;
+                }
 
-                // 3. Save Profile & Mapping
+                const credential = EmailAuthProvider.credential(usernameToEmail(username), password);
+                let linkedUser = user;
+                if (user.isAnonymous) {
+                    const linked = await linkWithCredential(user, credential);
+                    linkedUser = linked.user;
+                } else {
+                    throw new Error('A signed-in account is already active. Please log out before creating a new account.');
+                }
+
+                const uid = linkedUser.uid;
                 await setDoc(doc(db, "users", uid), {
-                    username: username,
-                    displayName: displayName,
+                    username,
+                    displayName,
                     platform: selectedPlatform,
-                    authType: "password",
+                    authType: 'password',
                     createdAt: serverTimestamp()
                 });
-                await setDoc(doc(db, "usernames", username), { uid: uid });
+                await setDoc(doc(db, "usernames", username), {
+                    uid,
+                    authType: 'password'
+                });
 
+                userData = { username, displayName, platform: selectedPlatform, authType: 'password' };
                 showToast("Account created!");
                 window.location.hash = '#dashboard';
             } catch (e) {
                 console.error(e);
-                showToast("Error creating account");
+                if (e?.code === 'auth/email-already-in-use') showToast("That username is already linked to an account");
+                else if (e?.code === 'auth/weak-password') showToast("Password must be at least 6 characters");
+                else showToast(e?.message || "Error creating account");
                 btn.disabled = false;
                 btn.innerText = "Create Account";
             }
         };
 
-        // LOGIN LOGIC (Username + Password, works across devices)
+        // LOGIN LOGIC — username + password works across devices/browsers.
         window.processLogin = async () => {
             const username = document.getElementById('loginUsernameInput').value.toLowerCase().trim().replace(/^@+/, '');
             const password = document.getElementById('loginPasswordInput').value;
@@ -740,19 +762,37 @@
             btn.innerHTML = '<span class="loader"></span>';
 
             try {
-                // The account uses a private synthetic email derived from the username.
-                const syntheticEmail = username + "@anonbox.app";
-                await signInWithEmailAndPassword(auth, syntheticEmail, password);
+                const mapping = await getDoc(doc(db, "usernames", username));
+                if (!mapping.exists()) {
+                    showToast("Username not found");
+                    return;
+                }
+
+                const savedUid = mapping.data().uid;
+                const email = usernameToEmail(username);
+                const cred = await signInWithEmailAndPassword(auth, email, password);
+
+                if (cred.user.uid !== savedUid) {
+                    await signOut(auth);
+                    throw new Error("Account mapping mismatch");
+                }
+
+                const profile = await getDoc(doc(db, "users", cred.user.uid));
+                if (!profile.exists()) {
+                    await signOut(auth);
+                    throw new Error("Profile not found");
+                }
+
+                currentUser = cred.user;
+                userData = profile.data();
                 showToast("Logged in!");
                 window.location.hash = '#dashboard';
             } catch (e) {
                 console.error(e);
-                if (e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password') {
-                    showToast("Invalid username or password");
-                } else if (e.code === 'auth/too-many-requests') {
-                    showToast("Too many attempts. Try again later.");
+                if (e?.code === 'auth/invalid-credential' || e?.code === 'auth/wrong-password' || e?.code === 'auth/user-not-found') {
+                    showToast("Incorrect username or password");
                 } else {
-                    showToast("Login failed");
+                    showToast("Login failed. Check your username and password.");
                 }
             } finally {
                 btn.disabled = false;
@@ -760,44 +800,39 @@
             }
         };
 
-        // Upgrade an old anonymous account on the original device so it can
-        // also be opened on other devices.
-        window.upgradeAccountPassword = async () => {
-            const input = document.getElementById('upgradePasswordInput');
-            const btn = document.getElementById('upgradePasswordBtn');
-            const password = input.value;
-            if (!currentUser || !userData) { showToast("Please log in first"); return; }
-            if (password.length < 6) { showToast("Password must be at least 6 characters"); return; }
+        // Upgrade an old anonymous account without changing its UID or messages.
+        window.enablePasswordLogin = async () => {
+            if (!currentUser || !currentUser.isAnonymous || !userData?.username) {
+                const btn = document.getElementById('enablePasswordBtn');
+                if (btn) btn.style.display = 'none';
+                return;
+            }
 
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loader"></span>';
+            const password = prompt('Create a password (at least 6 characters) for login on other devices:');
+            if (password === null) return;
+            if (password.length < 6) { showToast('Password must be at least 6 characters'); return; }
+
+            const username = userData.username.toLowerCase();
             try {
-                const alreadyPassword = currentUser.providerData?.some(p => p.providerId === 'password');
-                const email = userData.username + "@anonbox.app";
-                if (alreadyPassword) {
-                    await updatePassword(currentUser, password);
-                } else {
-                    const credential = EmailAuthProvider.credential(email, password);
-                    await linkWithCredential(currentUser, credential);
-                }
-                await updateDoc(doc(db, "users", currentUser.uid), { authType: "password" });
-                input.value = '';
-                document.getElementById('accountSecurityText').innerText = "Password login is enabled. You can use this username and password on another device.";
-                btn.innerText = "Password Login Enabled";
-                showToast("Login enabled on other devices!");
+                const credential = EmailAuthProvider.credential(usernameToEmail(username), password);
+                const linked = await linkWithCredential(currentUser, credential);
+                currentUser = linked.user;
+                await setDoc(doc(db, 'users', currentUser.uid), { authType: 'password' }, { merge: true });
+                await setDoc(doc(db, 'usernames', username), { uid: currentUser.uid, authType: 'password' }, { merge: true });
+                showToast('Password login enabled! You can now use another device.');
+                const btn = document.getElementById('enablePasswordBtn');
+                if (btn) btn.style.display = 'none';
             } catch (e) {
                 console.error(e);
-                if (e.code === 'auth/email-already-in-use') showToast("This username is already linked to a login");
-                else if (e.code === 'auth/requires-recent-login') showToast("Please log in again, then try this");
-                else showToast("Could not enable password login");
-                btn.disabled = false;
-                btn.innerText = "Enable Login on Other Devices";
+                if (e?.code === 'auth/credential-already-in-use') showToast('This username already has a password login.');
+                else showToast('Could not enable password login.');
             }
         };
 
         // DASHBOARD & INBOX
         async function loadDashboard() {
-            if (!userData) return;
+            await ensureUserData();
+            if (!userData || !currentUser) return;
             
             // Header UI
             document.getElementById('dashAvatar').innerText = userData.displayName[0].toUpperCase();
@@ -807,6 +842,8 @@
             
             const link = window.location.origin + window.location.pathname + '#@' + userData.username;
             document.getElementById('shareLinkInput').value = link;
+            const enableBtn = document.getElementById('enablePasswordBtn');
+            if (enableBtn) enableBtn.style.display = currentUser.isAnonymous ? 'block' : 'none';
 
             // Setup Realtime Inbox Listener
             if (inboxUnsubscribe) inboxUnsubscribe();
@@ -975,7 +1012,7 @@
         };
 
         window.handleLogout = async () => {
-            if (confirm("Logout? Anonymous accounts are stored on this browser session.")) {
+            if (confirm("Logout from AnonBox?")) {
                 await signOut(auth);
                 window.location.hash = '#start';
             }
@@ -1007,18 +1044,17 @@
 
         window.copyLink = async () => {
             const input = document.getElementById('shareLinkInput');
+            await ensureUserData();
             const link = getReadyShareLink();
             if (!link) {
-                showToast("Please open your dashboard first");
+                showToast("Please log in first");
                 return;
             }
 
             try {
-                // Modern Clipboard API works on HTTPS / supported browsers.
                 if (navigator.clipboard && window.isSecureContext) {
                     await navigator.clipboard.writeText(link);
-                } else {
-                    // Fallback for Blogger, file previews, and older mobile browsers.
+                } else if (input) {
                     input.removeAttribute('readonly');
                     input.focus();
                     input.select();
@@ -1029,18 +1065,20 @@
                 }
                 showToast("Link copied!");
             } catch (error) {
-                // Last fallback: select the link so the user can copy it manually.
-                input.focus();
-                input.select();
-                input.setSelectionRange(0, link.length);
+                if (input) {
+                    input.focus();
+                    input.select();
+                    input.setSelectionRange(0, link.length);
+                }
                 showToast("Link selected — tap Copy");
             }
         };
 
         // NGL-STYLE SHARE + STORY CARD
-        window.openShareModal = () => {
+        window.openShareModal = async () => {
+            await ensureUserData();
             const readyLink = getReadyShareLink();
-            if (!readyLink) { showToast('Please open your dashboard first'); return; }
+            if (!readyLink) { showToast('Please log in first'); return; }
             const platform = (userData && userData.platform) ? userData.platform : selectedPlatform;
             document.getElementById('sharePlatformName').innerText = platform || 'Other';
             document.getElementById('shareModal').style.display = 'block';
@@ -1130,9 +1168,10 @@
 
         window.shareStoryCard = async () => {
             try {
+                await ensureUserData();
                 const file = await createStoryCardFile();
                 const link = getReadyShareLink();
-                if (!link) { showToast('Please open your dashboard first'); return; }
+                if (!link) { showToast('Please log in first'); return; }
                 const platform = (userData && userData.platform) ? userData.platform : selectedPlatform;
 
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
