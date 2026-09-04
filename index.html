@@ -5,10 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AnonBox — Send & Receive Anonymous Messages Online</title>
 
-    <!-- SEO Meta Description -->
-    <meta name="description" content="Send and receive anonymous messages online with AnonBox. Create your personal anonymous message link and receive messages from friends.">
+    <!-- SEO -->
+    <meta name="description" content="AnonBox lets you create a personal link to receive anonymous messages from friends. Share your link and receive anonymous messages online.">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="author" content="AnonBox">
+    <meta name="theme-color" content="#0f172a">
 
-    <!-- SEO Keywords -->
+    <!-- Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="AnonBox — Send & Receive Anonymous Messages">
+    <meta property="og:description" content="Create your personal AnonBox link and receive anonymous messages from friends.">
+    <meta property="og:site_name" content="AnonBox">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="AnonBox — Anonymous Messages">
+    <meta name="twitter:description" content="Create your personal anonymous message link with AnonBox.">
+
+    <!-- SEO Keywords (secondary; not a Google ranking factor) -->
     <meta name="keywords" content="anonymous messages, anonymous message, send anonymous message, receive anonymous messages, anonymous questions, anonymous message link, AnonBox">
     
     <!-- Fonts & Icons -->
@@ -343,6 +355,18 @@
         .tutorial-nav button { margin-bottom: 0; }
 
     </style>
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "AnonBox",
+      "applicationCategory": "SocialNetworkingApplication",
+      "description": "Create a personal link to receive anonymous messages online.",
+      "operatingSystem": "Any"
+    }
+    </script>
 </head>
 <body>
 
@@ -402,6 +426,12 @@
             </div>
 
             <div class="input-group">
+                <label>PASSWORD</label>
+                <input type="password" id="signupPasswordInput" class="input-main" placeholder="At least 6 characters" autocomplete="new-password">
+                <small style="display:block; margin-top:8px; color:var(--text-dim);">Required for secure login from other devices.</small>
+            </div>
+
+            <div class="input-group">
                 <label>DISPLAY NAME (Optional)</label>
                 <input type="text" id="displayNameInput" class="input-main" placeholder="e.g. Roshan">
             </div>
@@ -417,14 +447,19 @@
 
             <div class="input-group">
                 <label>USERNAME</label>
-                <input type="text" id="loginUsernameInput" class="input-main" placeholder="@username">
+                <input type="text" id="loginUsernameInput" class="input-main" placeholder="@username" autocomplete="username">
+            </div>
+
+            <div class="input-group">
+                <label>PASSWORD</label>
+                <input type="password" id="loginPasswordInput" class="input-main" placeholder="Enter your password" autocomplete="current-password">
             </div>
 
             <button id="loginBtn" class="btn btn-primary" onclick="processLogin()">Login</button>
             <button class="btn btn-outline" onclick="navigateTo('start')">Back</button>
 
             <p style="font-size: 0.8rem; color: var(--text-dim); text-align: center; margin-top: 15px;">
-                Note: Anonymous accounts are tied to your current browser session.
+                Use the username and password you created. You can now log in from another phone or browser.
             </p>
         </div>
 
@@ -445,6 +480,15 @@
                     <span class="stat-value" id="countUnread" style="color: var(--primary);">0</span>
                     <span class="stat-label">Unread</span>
                 </div>
+            </div>
+
+            <div class="card" id="accountSecurityCard">
+                <h3 style="margin-bottom:8px;">🔐 Account Login</h3>
+                <p id="accountSecurityText" style="color:var(--text-dim);font-size:.85rem;margin-bottom:14px;">Set a password so you can log in from another phone or browser.</p>
+                <div class="input-group" style="margin-bottom:12px;">
+                    <input type="password" id="upgradePasswordInput" class="input-main" placeholder="At least 6 characters" autocomplete="new-password">
+                </div>
+                <button id="upgradePasswordBtn" class="btn btn-outline" style="margin-bottom:0;" onclick="upgradeAccountPassword()">Enable Login on Other Devices</button>
             </div>
 
             <div class="card">
@@ -545,7 +589,7 @@
     <!-- FIREBASE SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signOut, EmailAuthProvider, linkWithCredential, signInWithEmailAndPassword, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // FIREBASE CONFIG (Kept exactly as provided)
@@ -600,6 +644,15 @@
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     userData = userDoc.data();
+                    setTimeout(() => {
+                        const securityText = document.getElementById('accountSecurityText');
+                        const securityBtn = document.getElementById('upgradePasswordBtn');
+                        const hasPassword = user.providerData?.some(p => p.providerId === 'password') || userData.authType === 'password';
+                        if (securityText && securityBtn && hasPassword) {
+                            securityText.innerText = "Password login is enabled. You can use this username and password on another device.";
+                            securityBtn.innerText = "Update Password";
+                        }
+                    }, 0);
                     if (['#start', '#login', '#username', ''].includes(window.location.hash)) {
                         window.location.hash = '#dashboard';
                     }
@@ -623,12 +676,15 @@
 
         // SIGNUP LOGIC
         window.processSignup = async () => {
-            const username = document.getElementById('usernameInput').value.toLowerCase().trim().replace('@', '');
+            const username = document.getElementById('usernameInput').value.toLowerCase().trim().replace(/^@+/, '');
             const displayName = document.getElementById('displayNameInput').value.trim() || username;
+            const password = document.getElementById('signupPasswordInput').value;
             const btn = document.getElementById('createAccountBtn');
             const status = document.getElementById('usernameStatus');
 
             if (username.length < 3) { showToast("Username too short"); return; }
+            if (!/^[a-z0-9._-]+$/.test(username)) { showToast("Use only letters, numbers, dot, underscore or hyphen"); return; }
+            if (password.length < 6) { showToast("Password must be at least 6 characters"); return; }
             
             btn.disabled = true;
             btn.innerHTML = '<span class="loader"></span>';
@@ -644,15 +700,21 @@
                     return;
                 }
 
-                // 2. Auth Anonymously
+                // 2. Create an anonymous Firebase session first, then upgrade it
+                // to email/password auth. The synthetic email stays private.
+                if (currentUser) await signOut(auth);
                 const cred = await signInAnonymously(auth);
                 const uid = cred.user.uid;
+                const syntheticEmail = username + "@anonbox.app";
+                const emailCredential = EmailAuthProvider.credential(syntheticEmail, password);
+                await linkWithCredential(cred.user, emailCredential);
 
                 // 3. Save Profile & Mapping
                 await setDoc(doc(db, "users", uid), {
                     username: username,
                     displayName: displayName,
                     platform: selectedPlatform,
+                    authType: "password",
                     createdAt: serverTimestamp()
                 });
                 await setDoc(doc(db, "usernames", username), { uid: uid });
@@ -667,33 +729,69 @@
             }
         };
 
-        // LOGIN LOGIC (Session-based)
+        // LOGIN LOGIC (Username + Password, works across devices)
         window.processLogin = async () => {
-            const username = document.getElementById('loginUsernameInput').value.toLowerCase().trim().replace('@', '');
+            const username = document.getElementById('loginUsernameInput').value.toLowerCase().trim().replace(/^@+/, '');
+            const password = document.getElementById('loginPasswordInput').value;
             const btn = document.getElementById('loginBtn');
-            if (!username) return;
+            if (!username || !password) { showToast("Enter username and password"); return; }
 
             btn.disabled = true;
             btn.innerHTML = '<span class="loader"></span>';
 
             try {
-                const mapping = await getDoc(doc(db, "usernames", username));
-                if (!mapping.exists()) {
-                    showToast("Username not found");
-                } else {
-                    const savedUid = mapping.data().uid;
-                    if (currentUser && currentUser.uid === savedUid) {
-                        showToast("Logged in!");
-                        window.location.hash = '#dashboard';
-                    } else {
-                        showToast("Please use the device/browser where this was created.");
-                    }
-                }
+                // The account uses a private synthetic email derived from the username.
+                const syntheticEmail = username + "@anonbox.app";
+                await signInWithEmailAndPassword(auth, syntheticEmail, password);
+                showToast("Logged in!");
+                window.location.hash = '#dashboard';
             } catch (e) {
-                showToast("Login failed");
+                console.error(e);
+                if (e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password') {
+                    showToast("Invalid username or password");
+                } else if (e.code === 'auth/too-many-requests') {
+                    showToast("Too many attempts. Try again later.");
+                } else {
+                    showToast("Login failed");
+                }
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Login";
+            }
+        };
+
+        // Upgrade an old anonymous account on the original device so it can
+        // also be opened on other devices.
+        window.upgradeAccountPassword = async () => {
+            const input = document.getElementById('upgradePasswordInput');
+            const btn = document.getElementById('upgradePasswordBtn');
+            const password = input.value;
+            if (!currentUser || !userData) { showToast("Please log in first"); return; }
+            if (password.length < 6) { showToast("Password must be at least 6 characters"); return; }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loader"></span>';
+            try {
+                const alreadyPassword = currentUser.providerData?.some(p => p.providerId === 'password');
+                const email = userData.username + "@anonbox.app";
+                if (alreadyPassword) {
+                    await updatePassword(currentUser, password);
+                } else {
+                    const credential = EmailAuthProvider.credential(email, password);
+                    await linkWithCredential(currentUser, credential);
+                }
+                await updateDoc(doc(db, "users", currentUser.uid), { authType: "password" });
+                input.value = '';
+                document.getElementById('accountSecurityText').innerText = "Password login is enabled. You can use this username and password on another device.";
+                btn.innerText = "Password Login Enabled";
+                showToast("Login enabled on other devices!");
+            } catch (e) {
+                console.error(e);
+                if (e.code === 'auth/email-already-in-use') showToast("This username is already linked to a login");
+                else if (e.code === 'auth/requires-recent-login') showToast("Please log in again, then try this");
+                else showToast("Could not enable password login");
+                btn.disabled = false;
+                btn.innerText = "Enable Login on Other Devices";
             }
         };
 
